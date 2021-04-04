@@ -13,3 +13,9 @@ def phm_score(y_true, y_predicted):
 
 def mse_score(y_true, y_predicted):
     return m.mean_squared_error(y_true, y_predicted)
+
+def print_scores(y_true, y_predicted, dataset):
+    print(" ============= {} =============".format(dataset))
+    print(" R2: {}".format(r2_score(y_true, y_predicted)))
+    print(" MSE: {}".format(mse_score(y_true, y_predicted)))
+    print(" PHM: {}".format(phm_score(y_true, y_predicted)))

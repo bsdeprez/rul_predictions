@@ -5,7 +5,10 @@ from Data.scoring_methods import *
 
 filepath = '../../../../Data/CMAPSSData/'
 FD001 = DataObject('FD001', filepath=filepath)
-FD001.add_kinking_function(130)
+
+chosen_sensors = ['s_2', 's_3', 's_4', 's_7', 's_11', 's_12', 's_15']
+drop_sensors = [sensor for sensor in FD001.sensor_names if sensor not in chosen_sensors]
+FD001.drop_columns(drop_sensors)
 
 x_train = FD001.train_df[FD001.sensor_names].values
 y_train = FD001.train_df['RUL'].values

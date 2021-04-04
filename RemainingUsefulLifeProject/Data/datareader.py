@@ -6,6 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 class DataObject:
     def __init__(self, dataset, filepath='../Data/CMAPSSData/'):
+        self.name = dataset
         files = {
             'train_file': "{}train_{}.txt".format(filepath, dataset),
             'test_file': "{}test_{}.txt".format(filepath, dataset),
