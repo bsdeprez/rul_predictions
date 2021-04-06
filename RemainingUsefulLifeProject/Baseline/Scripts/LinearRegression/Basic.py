@@ -1,7 +1,7 @@
-from Baseline.Models.linearreggression import LinearRegressionModel
-from Data.datareader import DataObject
-from Data.plotter import *
-from Data.scoring_methods import *
+from RemainingUsefulLifeProject.Baseline.Models.linearreggression import LinearRegressionModel
+from RemainingUsefulLifeProject.Data.datareader import DataObject
+from RemainingUsefulLifeProject.Data.plotter import *
+from RemainingUsefulLifeProject.Data.scoring_methods import *
 
 filepath = '../../../../Data/CMAPSSData/'
 FD001 = DataObject('FD001', filepath=filepath)
