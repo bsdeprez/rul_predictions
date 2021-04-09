@@ -1,5 +1,4 @@
 from Data.datareader import DataObject
+from RemainingUsefulLifeProject.Baseline.Models.fnn_standard import FNNModel
 
-FD001 = DataObject('FD001')
-FD001.add_kinking_function(130)
-print(FD001.train_df.head())
+model = FNNModel(12)

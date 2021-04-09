@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 
+from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 
 
@@ -29,8 +30,8 @@ class DataObject:
     def __normalize__(self, columns):
         scaler = MinMaxScaler()
         scaler.fit(self.train_df[columns])
-        self.train_df[columns] = 2*pd.DataFrame(scaler.transform(self.train_df[columns])) - 1
-        self.test_df[columns] = 2*pd.DataFrame(scaler.transform(self.test_df[columns])) - 1
+        self.train_df[columns] = 2 * pd.DataFrame(scaler.transform(self.train_df[columns])) - 1
+        self.test_df[columns] = 2 * pd.DataFrame(scaler.transform(self.test_df[columns])) - 1
 
     def drop_columns(self, columns):
         for column in columns:
@@ -51,3 +52,13 @@ class DataObject:
         result_frame = df.merge(max_cycle.to_frame(name='max'), left_on='unit_nr', right_index=True)
         df['RUL'] = result_frame['max'] - result_frame['time_cycle']
         return df
+
+    def split_on_fault_modes(self):
+        sensors = ['s_15', 's_20', 's_21']
+        copy = self.train_df.copy()
+        km = KMeans(n_clusters=2, init='k-means++')
+        y_km = km.fit_predict(copy[sensors])
+        copy['cluster'] = pd.DataFrame(y_km)
+        series = copy[copy['RUL'] <= 15].groupby(by='unit_nr')['cluster'].mean()
+        copy = pd.DataFrame(series).rename(columns={0: 'unit_nr', 1: 'cluster'})
+        self.train_df = self.train_df.merge(copy, on='unit_nr')

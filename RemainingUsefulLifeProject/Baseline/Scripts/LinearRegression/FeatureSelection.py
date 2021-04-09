@@ -7,8 +7,7 @@ filepath = '../../../../Data/CMAPSSData/'
 FD001 = DataObject('FD001', filepath=filepath)
 FD003 = DataObject('FD003', filepath=filepath)
 
-chosen_sensors = ['s_2', 's_3', 's_4', 's_7', 's_11', 's_12', 's_15']
-drop_sensors = [sensor for sensor in FD001.sensor_names if sensor not in chosen_sensors]
+drop_sensors = ['s_1', 's_5', 's_10', 's_16', 's_18', 's_19']
 FD001.drop_columns(drop_sensors)
 FD003.drop_columns(drop_sensors)
 
@@ -22,11 +21,12 @@ def get_datasets(data_object):
 
 def test_data(model, x_test, y_test, dataset, trained_on=""):
     y_predicted = model.predict(x_test)
-    if len(trained_on) > 0:
-        trained_on = " (trained on {})".format(trained_on)
-    plot_predicted_v_true(y_test, y_predicted, "Accuracy {}{}".format(dataset, trained_on))
-    plot_difference(y_test, y_predicted, "Difference distribution {}{}".format(dataset, trained_on))
-    print_scores(y_test, y_predicted, dataset)
+    plot_predicted_v_true(y_test, y_predicted, "Accuracy {}".format(dataset),
+                          "Linear Regression\\Feature Selection\\Trained on {}".format(trained_on), show=False)
+    plot_difference(y_test, y_predicted, "Difference distribution {}".format(dataset),
+                    "Linear Regression\\Feature Selection\\Trained on {}".format(trained_on), show=False)
+    print_scores(y_test, y_predicted, dataset, "Linear Regression\\Feature Selection\\Trained on {}".format(trained_on),
+                 dataset)
 
 
 x_train_FD001, y_train_FD001, x_test_FD001, y_test_FD001 = get_datasets(FD001)
