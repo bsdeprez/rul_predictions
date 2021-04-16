@@ -62,3 +62,14 @@ class DataObject:
         series = copy[copy['RUL'] <= 15].groupby(by='unit_nr')['cluster'].mean()
         copy = pd.DataFrame(series).rename(columns={0: 'unit_nr', 1: 'cluster'})
         self.train_df = self.train_df.merge(copy, on='unit_nr')
+
+    def split_on_condition(self, df):
+        conditions = {'35,1,100': 1, '42,1,100': 2, '25,1,60': 3, '20,1,100': 4, '0,0,100': 5, '10,0,100': 6}
+        copy_df = df.copy()
+        condition_list = []
+        for setting1, setting2, setting3 in df[self.setting_names].values:
+            key = "{},{},{}".format(round(setting1), round(setting2), round(setting3))
+            condition_list.append(conditions[key])
+        conditions_df = pd.DataFrame(condition_list, columns=['condition'])
+        copy_df = copy_df.merge(conditions_df, left_index=True, right_index=True)
+        return copy_df

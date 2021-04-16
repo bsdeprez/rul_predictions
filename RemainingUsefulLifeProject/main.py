@@ -1,17 +1,16 @@
-from RemainingUsefulLifeProject.Baseline.Models.maml.SimpleModel import CustomModel
 from RemainingUsefulLifeProject.Data.datareader import DataObject
+import os
 
 filepath = "../Data/CMAPSSData/"
-FD001 = DataObject('FD001', filepath=filepath)
+custom_datasets = "../Data/Custom/Per_Condition"
+FD002 = DataObject('FD002', filepath=filepath)
+x_train = FD002.train_df[FD002.sensor_names].values
+y_train = FD002.train_df['RUL'].values
+train = FD002.split_on_condition(FD002.test_df)
 
-x_train = FD001.train_df[FD001.sensor_names].values
-y_train = FD001.train_df['RUL'].values
-x_test = FD001.test_df.groupby('unit_nr').last(1)[FD001.sensor_names].values
-y_test = FD001.truth_df['RUL'].values
-
-model = CustomModel(x_train.shape[1])
-model.train(x_train, y_train, 5)
-
-weights = model.get_weights()
-model.set_weights(weights)
-
+for i in range(1, 7):
+    df_per_condition = train[train['condition'] == i]
+    filename = "FD002_test_condition_{}.csv".format(i)
+    if len(df_per_condition.index) > 0:
+        path = os.path.join(custom_datasets, filename)
+        df_per_condition.to_csv(path, encoding='utf-8', index=False)
