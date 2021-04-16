@@ -1,4 +1,4 @@
-from RemainingUsefulLifeProject.Baseline.Models.fnn_standard import FNNModel
+from RemainingUsefulLifeProject.Baseline.Models.fnn_models.fnn_standard import FNNModel
 from RemainingUsefulLifeProject.Data.datareader import DataObject
 from RemainingUsefulLifeProject.Data.plotter import *
 from RemainingUsefulLifeProject.Data.scoring_methods import *
