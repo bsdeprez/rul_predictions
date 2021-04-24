@@ -11,7 +11,7 @@ class FNNModel:
         self.model.add(Dense(5))
         self.model.add(Dense(3))
         self.model.add(Dense(1))
-        self.model.compile(loss='mean_squared_error', optimizer='adam')
+        self.model.compile(loss=tf.keras.losses.MeanSquaredError(), optimizer='adam')
 
     def train(self, x, y, epochs):
         return self.model.fit(x, y, epochs=epochs, validation_split=0.1)

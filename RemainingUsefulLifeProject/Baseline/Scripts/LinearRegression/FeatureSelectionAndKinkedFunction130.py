@@ -1,5 +1,5 @@
 from RemainingUsefulLifeProject.Baseline.Models.linearreggression import LinearRegressionModel
-from RemainingUsefulLifeProject.Data.datareader import DataObject
+from RemainingUsefulLifeProject.Data.dataobject import DataObject
 from RemainingUsefulLifeProject.Data.scoring_methods import *
 from RemainingUsefulLifeProject.Data.plotter import *
 
