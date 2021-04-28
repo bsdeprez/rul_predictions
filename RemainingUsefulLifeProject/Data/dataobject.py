@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-
+import re
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 
@@ -78,13 +78,36 @@ class DataObject:
 
 class CustomDataObject:
 
-    def __init__(self, train_path='../Data/Custom/Train/', test_path='../Data/Custom/Test/'):
+    def __init__(self, dataset, filepath='../Data/Custom/'):
+        self.index_names = ['unit_nr', 'time_cycle']
+        self.setting_names = ['setting_{}'.format(i) for i in range(1, 4)]
         self.sensor_names = ['s_{}'.format(i) for i in range(1, 22)]
-        self.train_list = []
-        self.test_list = []
-        for file in os.listdir(train_path):
-            df = pd.read_csv(os.path.join(train_path, file))
-            self.train_list.append(df)
-        for file in os.listdir(test_path):
-            df = pd.read_csv(os.path.join(test_path, file))
-            self.test_list.append(df)
+        self.train_dfs = {}
+        self.test_dfs = {}
+        filepath = os.path.join(filepath, dataset)
+        self.conditions = set()
+        for file in os.listdir(filepath):
+            match = re.match(r".+_condition_([0-9]+).+", file)
+            if match:
+                self.conditions.add(match.group(1))
+        for condition in self.conditions:
+            train_file = "train_condition_{}.txt".format(condition)
+            test_file = "test_condition_{}.txt".format(condition)
+            train_df = pd.read_csv(os.path.join(filepath, train_file), sep=';')
+            test_df = pd.read_csv(os.path.join(filepath, test_file), sep=';')
+            self.train_dfs[condition] = train_df
+            self.test_dfs[condition] = test_df
+
+    def add_kinking_function(self, kink):
+        for condition in self.conditions:
+            self.train_dfs[condition]['RUL'].clip(upper=kink, inplace=True)
+            self.test_dfs[condition]['RUL'].clip(upper=kink, inplace=True)
+
+    def drop_columns(self, columns):
+        for column in columns:
+            if column in self.sensor_names: self.sensor_names.remove(column)
+            if column in self.setting_names: self.setting_names.remove(column)
+            if column in self.index_names: self.index_names.remove(column)
+        for condition in self.conditions:
+            self.train_dfs[condition].drop(columns, axis=1, errors='ignore', inplace=True)
+            self.test_dfs[condition].drop(columns, axis=1, errors='ignore', inplace=True)

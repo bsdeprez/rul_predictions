@@ -1,9 +1,6 @@
 import sklearn.metrics as m
 import numpy as np
-import os
-
 from RemainingUsefulLifeProject.Data.plotter import __get_images_directory__
-
 
 def r2_score(y_true, y_predicted):
     return m.r2_score(y_true, y_predicted)
