@@ -11,8 +11,10 @@ class FFNModel(keras.Model, ABC):
     def __init__(self, input_size):
         super().__init__()
         self.hidden1 = keras.layers.Dense(24, input_shape=(input_size,))
-        self.hidden2 = keras.layers.Dense(5)
-        self.hidden3 = keras.layers.Dense(3)
+        self.hidden2 = keras.layers.Dense(100)
+        self.hidden3 = keras.layers.Dense(100)
+        self.hidden4 = keras.layers.Dense(100)
+        self.hidden5 = keras.layers.Dense(24)
         self.out = keras.layers.Dense(1)
 
     def train(self, x, y, epochs, val_split=0.1, batch_size=100, lr=0.01):
@@ -76,6 +78,8 @@ class FFNModel(keras.Model, ABC):
         x = keras.activations.relu(self.hidden1(x))
         x = keras.activations.relu(self.hidden2(x))
         x = keras.activations.relu(self.hidden3(x))
+        x = keras.activations.relu(self.hidden4(x))
+        x = keras.activations.relu(self.hidden5(x))
         x = self.out(x)
         return x
 

@@ -32,6 +32,7 @@ def plot_predicted_v_true(y_true, y_predicted, title="", folder="", show=True):
     plt.ylabel('Predictions')
     plt.axis('equal')
     plt.title(title)
+    plt.legend(['true values', 'predicted values'], loc='upper right')
     plt.savefig(folder+title)
     if show:
         plt.show()

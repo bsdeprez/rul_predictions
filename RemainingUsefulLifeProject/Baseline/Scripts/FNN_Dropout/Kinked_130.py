@@ -1,4 +1,4 @@
-from RemainingUsefulLifeProject.Baseline.Models.FNNs.fnn_standard import FFNModel
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.fnn_dropout import FFNModel
 from RemainingUsefulLifeProject.Data.dataobject import CustomDataObject
 
 from tensorflow.python.framework.ops import disable_eager_execution
@@ -11,6 +11,8 @@ filepath = '../../../../Data/Custom/'
 FD001 = CustomDataObject('FD001', filepath)
 FD002 = CustomDataObject('FD002', filepath)
 
+FD001.add_kinking_function(130)
+FD002.add_kinking_function(130)
 
 def get_data(dao, condition):
     x_train, y_train = dao.train_dfs[condition][dao.sensor_names], dao.train_dfs[condition]['RUL']
@@ -21,10 +23,10 @@ def get_data(dao, condition):
 def print_results(model, x_test, y_test, tested_on, trained_on):
     y_predicted = model.predict(x_test)
     plot_predicted_v_true(y_test, y_predicted, "Accuracy {}".format(tested_on),
-                          "Standard FNN\\Basic\\Trained on {}".format(trained_on), show=False)
+                          "Dropout FNN\\Kinked 130\\Trained on {}".format(trained_on), show=False)
     plot_difference(y_test, y_predicted, 'Difference distribution {}'.format(tested_on),
-                    "Standard FNN\\Basic\\Trained on {}".format(trained_on), show=False)
-    print_scores(y_test, y_predicted, tested_on, "Standard FNN\\Basic\\Trained on {}".format(trained_on), tested_on)
+                    "Dropout FNN\\Kinked 130\\Trained on {}".format(trained_on), show=False)
+    print_scores(y_test, y_predicted, tested_on, "Dropout FNN\\Kinked 130\\Trained on {}".format(trained_on), tested_on)
 
 
 xs_1, ys_1, xt_1, yt_1 = get_data(FD001, "5")
