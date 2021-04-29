@@ -40,8 +40,7 @@ class FFNModel(keras.Model, ABC):
             with tqdm(desc="[{:0>3d}/{:0>3d}]".format(epoch, epochs), total=len(train_dataset)) as progressbar:
                 for x_batch_train, y_batch_train in train_dataset:
                     with tf.GradientTape() as tape:
-                        predicted = self.forward(x_batch_train)
-                        train_loss = loss_fn(y_batch_train, predicted)
+                        train_loss, predicted = self.compute_loss(x_batch_train, y_batch_train, loss_fn)
                     grads = tape.gradient(train_loss, self.trainable_variables)
                     optimizer.apply_gradients(zip(grads, self.trainable_variables))
                     train_metric.update_state(y_batch_train, predicted)
@@ -82,6 +81,11 @@ class FFNModel(keras.Model, ABC):
         x = keras.activations.relu(self.hidden5(x))
         x = self.out(x)
         return x
+
+    def compute_loss(self, x, y, loss_fn):
+        logits = self.forward(x)
+        mse = loss_fn(y, logits)
+        return mse, logits
 
     @staticmethod
     def __split_in_training_and_validation__(x, y, val_split):
