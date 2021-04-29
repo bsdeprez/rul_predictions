@@ -40,7 +40,7 @@ class FFNModel(keras.Model, ABC):
             with tqdm(desc="[{:0>3d}/{:0>3d}]".format(epoch, epochs), total=len(train_dataset)) as progressbar:
                 for x_batch_train, y_batch_train in train_dataset:
                     with tf.GradientTape() as tape:
-                        predicted = self.__forward__(x_batch_train)
+                        predicted = self.forward(x_batch_train)
                         train_loss = loss_fn(y_batch_train, predicted)
                     grads = tape.gradient(train_loss, self.trainable_variables)
                     optimizer.apply_gradients(zip(grads, self.trainable_variables))
@@ -50,7 +50,7 @@ class FFNModel(keras.Model, ABC):
                 # Run a validation loop at the end of each epoch
                 for x_batch_val, y_batch_val in val_dataset:
                     y_batch_val = tf.cast(y_batch_val, dtype=tf.float32)
-                    val_predicted = self.__forward__(x_batch_val)
+                    val_predicted = self.forward(x_batch_val)
                     val_metric.update_state(y_batch_val, val_predicted)
 
                 # Update the progress-bar
@@ -66,10 +66,10 @@ class FFNModel(keras.Model, ABC):
                 val_metric.reset_states()
 
     def predict(self, x):
-        y = self.__forward__(x)
+        y = self.forward(x)
         return numpy.array(y).flatten()
 
-    def __forward__(self, x):
+    def forward(self, x):
         """
         Runs x through the neural net and returns a predicted output.
         :param x: An input-tensor
