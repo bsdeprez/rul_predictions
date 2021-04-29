@@ -5,18 +5,31 @@ import random
 import tensorflow as tf
 from tqdm import tqdm
 
+
 def to_tensor_slices(x, y):
     return tf.data.Dataset.from_tensor_slices((x, y))
 
+
 def train_maml(model, epochs, dataset_list, batch_size=100):
     optimizer = keras.optimizers.Adam()
+    loss_fn = keras.losses.MeanSquaredError()
     # STEP 2
-    for epoch in range(1, epochs+1):
-        with tqdm(desc="[{:0>3d}/{:0>3d}]".format(epoch, epochs), total=len(dataset_list)) as progressbar:
-            total_loss = 0
-            losses = []
-            # STEP 3 and 4
-            for dataset in random.sample(dataset_list, len(dataset_list)):
-                for x_batch, y_batch in dataset:
-                    print(type(x_batch))
-
+    for epoch in range(1, epochs + 1):
+        total_loss = 0
+        losses = []
+        # STEP 3 and 4
+        for i, dataset in enumerate(random.sample(dataset_list, len(dataset_list))):
+            train_data = dataset.shuffle(buffer_size=100).batch(batch_size)
+            with tqdm(
+                    desc="Epochs[{:0>3d}/{:0>3d}] Dataset [{:0>2d}/{:0>2d}]".format(epoch, epochs, i, len(dataset_list))
+                    , total=len(train_data)) as progressbar:
+                for x, y in train_data:
+                    model.forward(x)  # Run forward pass to initialize weights
+                    with tf.GradientTape() as test_tape:
+                        # STEP 5
+                        with tf.GradientTape() as train_tape:
+                            train_loss, _ = model.compute_loss(x, y, loss_fn)
+                        gradients = train_tape.gradient(train_loss, model.trainable_variables)
+                        k = 0
+                        model_copy = copy_mode(model, x)
+                    progressbar.update()

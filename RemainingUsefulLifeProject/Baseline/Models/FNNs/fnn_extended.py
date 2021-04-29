@@ -10,6 +10,7 @@ class FFNModel(keras.Model, ABC):
 
     def __init__(self, input_size):
         super().__init__()
+        self.input_size = input_size
         self.hidden1 = keras.layers.Dense(24, input_shape=(input_size,))
         self.hidden2 = keras.layers.Dense(100)
         self.hidden3 = keras.layers.Dense(100)
@@ -86,6 +87,17 @@ class FFNModel(keras.Model, ABC):
         logits = self.forward(x)
         mse = loss_fn(y, logits)
         return mse, logits
+
+    def copy_model(self, x):
+        """
+        Creates a new model with the same weights as this model.
+        :param x: An input example. This is used to run a forward pass in order to initialize the weights.
+        :return: A copy of the model.
+        """
+        copied_model = FFNModel(self.input_size)
+        copied_model.forward(x)
+        copied_model.set_weights(self.get_weights())
+        return copied_model
 
     @staticmethod
     def __split_in_training_and_validation__(x, y, val_split):
