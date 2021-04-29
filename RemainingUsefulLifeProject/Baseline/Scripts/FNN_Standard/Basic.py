@@ -1,8 +1,6 @@
 from RemainingUsefulLifeProject.Baseline.Models.FNNs.fnn_standard import FFNModel
 from RemainingUsefulLifeProject.Data.dataobject import CustomDataObject
 
-from tensorflow.python.framework.ops import disable_eager_execution
-
 from RemainingUsefulLifeProject.Data.plotter import plot_predicted_v_true, plot_difference
 from RemainingUsefulLifeProject.Data.scoring_methods import print_scores
 

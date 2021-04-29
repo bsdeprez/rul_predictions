@@ -35,4 +35,5 @@ if len(input_sizes) != 1:
 
 input_size = next(iter(input_sizes))
 ffnn = FFNModel(input_size)
+train_maml(ffnn, 1, train)
 

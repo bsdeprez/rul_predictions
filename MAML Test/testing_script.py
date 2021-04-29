@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from sinusoidgenerator import SinusoidGenerator, plot
 from mamlmodel import train_maml
 from transfermodel import *
 from sinemodel import SineModel

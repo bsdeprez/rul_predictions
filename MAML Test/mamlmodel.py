@@ -27,7 +27,7 @@ def train_maml(model, epochs, dataset, lr_inner=0.01, batch_size=1, log_steps=10
         # STEP 3 and 4
         for i, t in enumerate(random.sample(dataset, len(dataset))):
             x, y = np_to_tensor(t.batch())
-            model.forward(x) # run forward pass to initialize weights
+            model.forward(x)  # run forward pass to initialize weights
             with tf.GradientTape() as test_tape:
                 # STEP 5
                 with tf.GradientTape() as train_tape:
@@ -39,7 +39,8 @@ def train_maml(model, epochs, dataset, lr_inner=0.01, batch_size=1, log_steps=10
                 for j in range(len(model_copy.layers)):
                     model_copy.layers[j].kernel = tf.subtract(model.layers[j].kernel,
                                                               tf.multiply(lr_inner, gradients[k]))
-                    model_copy.layers[j].bias = tf.subtract(model.layers[j].bias, tf.multiply(lr_inner, gradients[k+1]))
+                    model_copy.layers[j].bias = tf.subtract(model.layers[j].bias,
+                                                            tf.multiply(lr_inner, gradients[k + 1]))
                     k += 2
                 # STEP 7
                 test_loss, logits = model_copy.compute_loss(x, y)
