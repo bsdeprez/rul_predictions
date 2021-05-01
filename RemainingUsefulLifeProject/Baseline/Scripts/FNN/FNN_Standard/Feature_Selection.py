@@ -6,7 +6,7 @@ from tensorflow.python.framework.ops import disable_eager_execution
 from RemainingUsefulLifeProject.Data.plotter import plot_predicted_v_true, plot_difference
 from RemainingUsefulLifeProject.Data.scoring_methods import print_scores
 
-filepath = '../../../../Data/Custom/'
+filepath = '../../../../../Data/Custom/'
 
 FD001 = CustomDataObject('FD001', filepath)
 FD002 = CustomDataObject('FD002', filepath)
