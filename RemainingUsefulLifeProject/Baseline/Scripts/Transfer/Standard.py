@@ -1,5 +1,4 @@
 from RemainingUsefulLifeProject.Baseline.Models.FNNs.fnn_standard import FFNModel
-from RemainingUsefulLifeProject.Baseline.Models.MAML.maml import train_maml
 from RemainingUsefulLifeProject.Data.dataobject import CustomDataObject
 import tensorflow as tf
 
@@ -21,19 +20,21 @@ def get_data(dao, condition):
 def make_dataset(dao, train_dataset, test_dataset, input_size_set):
     for condition in dao.conditions:
         train_data, test_data, size = get_data(dao, condition)
-        train_dataset.append(train_data)
-        test_dataset.append(test_data)
+        train_dataset[condition] = train_data
+        test_dataset[condition] = test_data
         input_size_set.add(size)
     return train_dataset, test_dataset, input_size_set
 
 
-train, test, input_sizes = make_dataset(FD001, [], [], set())
-train, test, input_sizes = make_dataset(FD002, train, test, input_sizes)
-if len(input_sizes) != 1:
+# Train on FD001
+# => score every condition from FD002
+# Train on each condition of FD002
+#   => score every other condition from FD002, as well as FD001
+train_FD001, test_FD001, input_size = make_dataset(FD001, {}, {}, set())
+train_FD002, test_FD002, input_size = make_dataset(FD002, {}, {}, input_size)
+if len(input_size) != 1:
     print("Multiple input-shapes found!")
     exit(1)
-
-input_size = next(iter(input_sizes))
-ffnn = FFNModel(input_size)
-train_maml(ffnn, 1, train)
-
+# Start by training on FD001
+model = FFNModel(next(iter(input_size)))
+model.train(train_FD001["5"], test_FD001["5"], 1)
