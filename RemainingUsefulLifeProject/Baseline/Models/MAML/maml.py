@@ -5,10 +5,10 @@ import random
 import tensorflow as tf
 from tqdm import tqdm
 
-
+"""
 def to_tensor_slices(x, y):
     return tf.data.Dataset.from_tensor_slices((x, y))
-
+"""
 
 def train_maml(model, epochs, dataset_list, batch_size=100, lr_inner=0.01, lr_outer=0.03):
     optimizer = keras.optimizers.Adam()

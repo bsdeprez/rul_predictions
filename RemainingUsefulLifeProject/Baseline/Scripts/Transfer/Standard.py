@@ -1,6 +1,7 @@
 from RemainingUsefulLifeProject.Baseline.Models.FNNs.fnn_standard import FFNModel
 from RemainingUsefulLifeProject.Data.dataobject import CustomDataObject
 import tensorflow as tf
+import numpy as np
 
 filepath = '../../../../Data/Custom/'
 
@@ -37,4 +38,19 @@ if len(input_size) != 1:
     exit(1)
 # Start by training on FD001
 model = FFNModel(next(iter(input_size)))
-model.train(train_FD001["5"], test_FD001["5"], 1)
+# model.train(train_FD001["5"], epochs=50)
+conditions = list(FD002.conditions)
+conditions.sort()
+for condition in conditions:
+    truth = []
+    predicted = []
+    test_dataset = test_FD002[condition]
+    for x, y in test_dataset:
+        truth.append(y)
+        x = np.array(x).reshape((1, 21))
+        predicted.append(model.forward(x))
+    truth = np.array(truth)
+    #print(truth.shape)
+print(predicted[0])
+print(truth[0])
+

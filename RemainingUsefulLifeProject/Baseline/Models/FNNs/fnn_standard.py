@@ -16,10 +16,9 @@ class FFNModel(keras.Model, ABC):
         self.hidden3 = keras.layers.Dense(3)
         self.out = keras.layers.Dense(1)
 
-    def train(self, x, y, epochs, val_split=0.1, batch_size=100, lr=0.01):
+    def train(self, dataset, epochs, val_split=0.1, batch_size=100, lr=0.01):
         """
-        :param x: training input.
-        :param y: training labels/output.
+        :param dataset: the training dataset, as a TensorSliceDataset.
         :param epochs: number of epochs to train the model.
         :param val_split: split between training and validation data.
         :param batch_size: The number of samples propagated through the network.
@@ -27,12 +26,9 @@ class FFNModel(keras.Model, ABC):
         """
         loss_fn = keras.losses.MeanSquaredError()
         optimizer = tf.keras.optimizers.Adam(learning_rate=lr)
-
         train_metric, val_metric = keras.metrics.MeanSquaredError(), keras.metrics.MeanSquaredError()
-
-        train_dataset, val_dataset = self.__split_in_training_and_validation__(x, y, val_split)
-        train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
-        val_dataset = val_dataset.batch(batch_size)
+        train_dataset, val_dataset = self.__split_in_training_and_validation__(dataset, val_split)
+        train_dataset, val_dataset = train_dataset.batch(batch_size), val_dataset.batch(batch_size)
         # Iterate over the epochs
         for epoch in range(1, epochs + 1):
             # Iterate over the batches of the dataset
@@ -47,7 +43,7 @@ class FFNModel(keras.Model, ABC):
 
                 # Run a validation loop at the end of each epoch
                 for x_batch_val, y_batch_val in val_dataset:
-                    y_batch_val = tf.cast(y_batch_val, dtype=tf.float32)
+                    print(x_batch_val.shape)
                     val_predicted = self.forward(x_batch_val)
                     val_metric.update_state(y_batch_val, val_predicted)
 
@@ -64,8 +60,8 @@ class FFNModel(keras.Model, ABC):
                 val_metric.reset_states()
 
     def predict(self, x):
-        y = self.forward(x)
-        return numpy.array(y).flatten()
+        return self.forward(x)
+
 
     def forward(self, x):
         """
@@ -95,17 +91,14 @@ class FFNModel(keras.Model, ABC):
         copied_model.set_weights(self.get_weights())
         return copied_model
 
-
     @staticmethod
-    def __split_in_training_and_validation__(x, y, val_split):
+    def __split_in_training_and_validation__(dataset, val_split):
         """
-        :param x: training input
-        :param y: training labels/output
+        :param dataset: the training-dataset.
         :param val_split: percentage
         :returns: train_dataset, val_dataset
         """
-        split = math.floor(len(x) * val_split)
-        x_s, y_s, x_val, y_val = x[split:], y[split:], x[:split], y[:split]
-        train_dataset = tf.data.Dataset.from_tensor_slices((x_s, y_s))
-        val_dataset = tf.data.Dataset.from_tensor_slices((x_val, y_val))
+        dataset = dataset.shuffle(buffer_size=1024)  # Shuffle the dataset.
+        split = math.floor(len(dataset) * val_split)  # Find the length of the validation-set
+        val_dataset, train_dataset = dataset.take(split), dataset.skip(split)
         return train_dataset, val_dataset
