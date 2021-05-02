@@ -2,7 +2,7 @@ from abc import ABC
 from tensorflow import keras
 import tensorflow as tf
 import math
-import numpy
+import numpy as np
 from tqdm import tqdm
 
 
@@ -17,11 +17,9 @@ class FFNModel(keras.Model, ABC):
         self.hidden4 = keras.layers.Dense(13)
         self.out = keras.layers.Dense(1)
 
-
-    def train(self, x, y, epochs, val_split=0.1, batch_size=100, lr=0.01):
+    def train(self, dataset, epochs, val_split=0.1, batch_size=100, lr=0.01):
         """
-        :param x: training input.
-        :param y: training labels/output.
+        :param dataset: the training dataset, as a TensorSliceDataset.
         :param epochs: number of epochs to train the model.
         :param val_split: split between training and validation data.
         :param batch_size: The number of samples propagated through the network.
@@ -29,12 +27,9 @@ class FFNModel(keras.Model, ABC):
         """
         loss_fn = keras.losses.MeanSquaredError()
         optimizer = tf.keras.optimizers.Adam(learning_rate=lr)
-
         train_metric, val_metric = keras.metrics.MeanSquaredError(), keras.metrics.MeanSquaredError()
-
-        train_dataset, val_dataset = self.__split_in_training_and_validation__(x, y, val_split)
-        train_dataset = train_dataset.shuffle(buffer_size=1024).batch(batch_size)
-        val_dataset = val_dataset.batch(batch_size)
+        train_dataset, val_dataset = self.__split_in_training_and_validation__(dataset, val_split)
+        train_dataset, val_dataset = train_dataset.batch(batch_size), val_dataset.batch(batch_size)
         # Iterate over the epochs
         for epoch in range(1, epochs + 1):
             # Iterate over the batches of the dataset
@@ -49,7 +44,6 @@ class FFNModel(keras.Model, ABC):
 
                 # Run a validation loop at the end of each epoch
                 for x_batch_val, y_batch_val in val_dataset:
-                    y_batch_val = tf.cast(y_batch_val, dtype=tf.float32)
                     val_predicted = self.forward(x_batch_val)
                     val_metric.update_state(y_batch_val, val_predicted)
 
@@ -65,9 +59,15 @@ class FFNModel(keras.Model, ABC):
                 train_metric.reset_states()
                 val_metric.reset_states()
 
-    def predict(self, x):
-        y = self.forward(x)
-        return numpy.array(y).flatten()
+    def predict(self, dataset, batch_size=100):
+        truth = []
+        predicted = []
+        for x, y in dataset.batch(batch_size):
+            preds = np.array(self.forward(x))
+            predicted += list(preds.flatten())
+            truth_y = np.array(y)
+            truth += list(truth_y)
+        return np.array(truth), np.array(predicted)
 
     def forward(self, x):
         """
