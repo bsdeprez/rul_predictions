@@ -2,7 +2,7 @@ from abc import ABC
 from tensorflow import keras
 import tensorflow as tf
 import math
-import numpy
+import numpy as np
 from tqdm import tqdm
 
 
@@ -43,7 +43,6 @@ class FFNModel(keras.Model, ABC):
 
                 # Run a validation loop at the end of each epoch
                 for x_batch_val, y_batch_val in val_dataset:
-                    print(x_batch_val.shape)
                     val_predicted = self.forward(x_batch_val)
                     val_metric.update_state(y_batch_val, val_predicted)
 
@@ -59,9 +58,15 @@ class FFNModel(keras.Model, ABC):
                 train_metric.reset_states()
                 val_metric.reset_states()
 
-    def predict(self, x):
-        return self.forward(x)
-
+    def predict(self, dataset, batch_size=100):
+        truth = []
+        predicted = []
+        for x, y in dataset.batch(batch_size):
+            preds = np.array(self.forward(x))
+            predicted += list(preds.flatten())
+            truth_y = np.array(y)
+            truth += list(truth_y)
+        return np.array(truth), np.array(predicted)
 
     def forward(self, x):
         """

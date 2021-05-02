@@ -41,16 +41,9 @@ model = FFNModel(next(iter(input_size)))
 # model.train(train_FD001["5"], epochs=50)
 conditions = list(FD002.conditions)
 conditions.sort()
-for condition in conditions:
-    truth = []
-    predicted = []
+for condition in ["5"]:
     test_dataset = test_FD002[condition]
-    for x, y in test_dataset:
-        truth.append(y)
-        x = np.array(x).reshape((1, 21))
-        predicted.append(model.forward(x))
-    truth = np.array(truth)
-    #print(truth.shape)
-print(predicted[0])
-print(truth[0])
+    truth, predicted = model.predict(test_dataset)
+
+
 
