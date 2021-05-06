@@ -1,0 +1,3 @@
+from RemainingUsefulLifeProject.Data.plotter import __get_directory__
+
+__get_directory__()

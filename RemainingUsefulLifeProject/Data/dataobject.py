@@ -1,12 +1,42 @@
 import pandas as pd
 import os
 import re
+import numpy as np
+import math
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 
-'''
-The DataObject class is used to read and transform the pure 
-'''
+def batch_generator(x, y, batch_size):
+    permutations = np.random.permutation(len(x))
+    x, y = x[permutations], y[permutations]
+    number_of_batches = math.floor(len(x)/batch_size)
+    for i in range(number_of_batches):
+        start = batch_size*i
+        stop = batch_size*(i+1)
+        yield x[start:stop], y[start:stop]
+
+def split_in_validation_set(x, y, val_split):
+    permutations = np.random.permutation(len(x))
+    x, y = x[permutations], y[permutations]
+    split = math.floor(val_split*len(x))
+    return x[split:], y[split:], x[:split], y[:split]
+
+def get_data_per_condition(dao, condition):
+    train_data, test_data = dao.train_dfs[condition], dao.test_dfs[condition]
+    train_sensors, test_sensors = train_data[dao.sensor_names], test_data[dao.sensor_names]
+    train_rul, test_rul = train_data["RUL"], test_data["RUL"]
+    train_sensors, train_rul = np.array(train_sensors.values, dtype=np.float32), np.array(train_rul.values, dtype=np.float32)
+    test_sensors, test_rul = np.array(test_sensors.values, dtype=np.float32), np.array(test_rul.values, dtype=np.float32)
+    return (train_sensors, train_rul), (test_sensors, test_rul)
+
+def get_dataset(dao):
+    train, test = {}, {}
+    for condition in dao.conditions:
+        train_data, test_data = get_data_per_condition(dao, condition)
+        train[condition] = train_data
+        test[condition] = test_data
+    return train, test
+
 class DataObject:
     def __init__(self, dataset, filepath='../Data/CMAPSSData/'):
         self.name = dataset
