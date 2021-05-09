@@ -5,7 +5,7 @@ import tensorflow as tf
 
 
 def np_to_tensor(list_of_numpy_objects):
-    return (tf.convert_to_tensor(obj) for obj in list_of_numpy_objects)
+    return (tf.convert_to_tensor(obj, dtype=tf.float32) for obj in list_of_numpy_objects)
 
 
 def loss_function(pred_y, y):

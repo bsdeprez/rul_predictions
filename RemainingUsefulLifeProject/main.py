@@ -1,8 +1,9 @@
-from RemainingUsefulLifeProject.Data.dataobject import CustomDataObject
+from RemainingUsefulLifeProject.Data.cmapss_dao import DataObject
 
-dao = CustomDataObject('FD001')
+filepath = "../Data/CMAPSSData/"
 
-dao.add_kinking_function(5)
-dao.drop_columns(['condition'])
-print(dao.train_dfs['5'])
-
+FD001 = DataObject("FD001", filepath=filepath)
+FD001.add_kinking_point(130)
+FD001.drop_columns(['s_21'])
+train, test = FD001.datasets[1]
+print(train)

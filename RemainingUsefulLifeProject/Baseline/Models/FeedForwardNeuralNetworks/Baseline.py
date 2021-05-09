@@ -1,5 +1,6 @@
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.models import Sequential
+from tensorflow import keras
 
 from RemainingUsefulLifeProject.MAML.Models.maml import loss_function
 
@@ -12,17 +13,20 @@ def copy_model(model):
 
 class FFNModel:
 
-    def __init__(self, input_size):
+    def __init__(self, input_size, lr=0.01):
         self.input_size = input_size
         self.model = Sequential()
         self.model.add(Dense(24, input_dim=self.input_size, activation='relu'))
         self.model.add(Dense(5))
         self.model.add(Dense(3))
         self.model.add(Dense(1))
-        self.model.compile(loss='mean_squared_error', optimizer='adam')
+        optimizer = keras.optimizers.Adam(learning_rate=lr)
+        self.model.compile(loss='mean_squared_error', optimizer=optimizer)
 
     def train(self, x, y, epochs):
-        return self.model.fit(x, y, epochs=epochs, validation_split=0.1)
+        return self.model.fit(x, y, epochs=epochs, validation_split=0.1, callbacks=[
+            keras.callbacks.EarlyStopping(patience=10, monitor='val_loss', restore_best_weights=True)
+        ])
 
     def predict(self, x):
         return self.model.predict(x)
