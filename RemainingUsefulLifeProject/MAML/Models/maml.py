@@ -18,7 +18,7 @@ def compute_loss(model, x, y, loss_fn=loss_function):
     return mse, logits
 
 
-def train_maml(model, copy_function, epochs, dataset, lr_inner=0.01):
+def train_maml(model, copy_function, epochs, dataset, lr_inner=0.05):
     optimizer = keras.optimizers.Adam()
     for epoch in range(1, epochs + 1):
         print("Epoch {:0>3d} of {:0>3d}".format(epoch, epochs))
