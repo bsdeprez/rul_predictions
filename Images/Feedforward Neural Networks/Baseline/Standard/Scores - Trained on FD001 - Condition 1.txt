@@ -1,0 +1,28 @@
+==== Trained on FD001 - Condition 1, Tested on FD001 - Condition 1 ====
+mse: 691.0077514648438
+r2: 0.5998494845680031
+phm: 1851.0596923828125
+==== Trained on FD001 - Condition 1, Tested on FD002 - Condition 5 ====
+mse: 1824.167236328125
+r2: 0.4031510988089404
+phm: 26561.732421875
+==== Trained on FD001 - Condition 1, Tested on FD002 - Condition 2 ====
+mse: 1565.8363037109375
+r2: 0.4692787224076299
+phm: 85064.84375
+==== Trained on FD001 - Condition 1, Tested on FD002 - Condition 3 ====
+mse: 2483.512939453125
+r2: 0.14053981714617492
+phm: 372318.03125
+==== Trained on FD001 - Condition 1, Tested on FD002 - Condition 4 ====
+mse: 2377.870361328125
+r2: 0.1618646211417315
+phm: 399117.03125
+==== Trained on FD001 - Condition 1, Tested on FD002 - Condition 1 ====
+mse: 1014.1122436523438
+r2: 0.5717836872767529
+phm: 37022.7265625
+==== Trained on FD001 - Condition 1, Tested on FD002 - Condition 6 ====
+mse: 1405.2440185546875
+r2: 0.46173414033018223
+phm: 8933.3134765625

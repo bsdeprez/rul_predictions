@@ -28,7 +28,7 @@ def write_gathered_scores(scores, title="Scores Baseline"):
                 file.write("{};{};{};{}\n".format(epoch, r2_sc[epoch], mse_sc[epoch], phm_sc[epoch]))
 
 def save_results(y_true, y_pred, trained_on="", tested_on="", new_file=True):
-    folders = "Images", "Feedforward Neural Networks", "Baseline", "Normalised", "Standard"
+    folders = "Images", "Feedforward Neural Networks", "Baseline", "Standard"
     plot_predictions(y_true, y_pred, *folders,
                      title="Predictions - Trained on {}, tested on {}".format(trained_on, tested_on))
     plot_differences(y_true, y_pred, *folders,
@@ -67,7 +67,7 @@ def train_model(dao_1, dao_2, train_dao, train_condition, scores):
                      "{} - Condition {}".format(dao_2.name, cond), new_file=False)
 
 
-filepath = "../../../../Data/CMAPSSData/"
+filepath = "../../../../../Data/CMAPSSData/"
 FD001 = DataObject("FD001", filepath=filepath)
 FD002 = DataObject("FD002", filepath=filepath)
 
