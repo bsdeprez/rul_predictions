@@ -1,4 +1,4 @@
-from RemainingUsefulLifeProject.Baseline.Models.Baseline import FFNModel
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.Baseline import FFNModel
 from Unit_Testing.Helpers.plotter import plot_history, plot
 from Unit_Testing.Helpers.sinusoidgenerator import generate_dataset
 import matplotlib.pyplot as plt

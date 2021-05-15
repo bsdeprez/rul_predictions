@@ -1,6 +1,6 @@
 import numpy as np
 
-from RemainingUsefulLifeProject.Baseline.Models.Baseline import FFNModel
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.Baseline import FFNModel
 from RemainingUsefulLifeProject.Data.cmapss_dao import DataObject
 from RemainingUsefulLifeProject.Data.plotter import *
 from RemainingUsefulLifeProject.Data.plotter import __get_directory__

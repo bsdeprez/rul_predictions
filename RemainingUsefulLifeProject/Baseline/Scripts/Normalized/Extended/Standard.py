@@ -1,5 +1,5 @@
 import numpy as np
-from RemainingUsefulLifeProject.Baseline.Models.Extended import FFNModel
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.Extended import FFNModel
 from RemainingUsefulLifeProject.Data.cmapss_dao import DataObject
 from RemainingUsefulLifeProject.Data.plotter import *
 from RemainingUsefulLifeProject.Data.plotter import __get_directory__

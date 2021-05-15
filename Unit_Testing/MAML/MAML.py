@@ -1,4 +1,4 @@
-from RemainingUsefulLifeProject.Baseline.Models.Baseline import FFNModel, copy_model
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.Baseline import FFNModel, copy_model
 from RemainingUsefulLifeProject.MAML.Models.maml import train_maml
 from Unit_Testing.Helpers.evaluators import eval_sinewave_for_test
 from Unit_Testing.Helpers.sinusoidgenerator import generate_dataset, SinusoidGenerator

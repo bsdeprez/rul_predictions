@@ -1,4 +1,4 @@
-from RemainingUsefulLifeProject.Baseline.Models.Baseline import FFNModel, copy_model
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.Baseline import FFNModel, copy_model
 from RemainingUsefulLifeProject.Data.cmapss_dao import DataObject
 import math
 import numpy as np

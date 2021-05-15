@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-from RemainingUsefulLifeProject.Baseline.Models.Extended import FFNModel, copy_model
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.Extended import FFNModel, copy_model
 from RemainingUsefulLifeProject.Data.cmapss_dao import DataObject
 from RemainingUsefulLifeProject.Data.plotter import __get_directory__
 import pandas as pd
