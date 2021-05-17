@@ -1,8 +1,6 @@
-import random
-
 import numpy as np
 
-from RemainingUsefulLifeProject.Baseline.Models.FNNs.Baseline import FFNModel
+from RemainingUsefulLifeProject.Baseline.Models.FNNs.LowerLearningRate import FFNModel
 from RemainingUsefulLifeProject.Data.cmapss_dao import DataObject
 from RemainingUsefulLifeProject.Data.plotter import *
 from RemainingUsefulLifeProject.Data.plotter import __get_directory__
@@ -18,7 +16,7 @@ def get_data(train_df, test_df, dao):
     return train_x, train_y, test_x, test_y
 
 def write_gathered_scores(scores, title="Scores Baseline"):
-    folders = "Results", "FeedForward Neural Network", "Baseline", "Standard"
+    folders = "Results", "FeedForward Neural Network", "Lowest Learning Rate", "Standard"
     folder = __get_directory__(*folders)
     for key in scores.keys():
         file_title = "{} - Condition {}.csv".format(title, key)
@@ -30,7 +28,7 @@ def write_gathered_scores(scores, title="Scores Baseline"):
                 file.write("{};{};{};{}\n".format(epoch, r2_sc[epoch], mse_sc[epoch], phm_sc[epoch]))
 
 def save_results(y_true, y_pred, trained_on="", tested_on="", new_file=True):
-    folders = "Images", "Feedforward Neural Networks", "200 Units", "Standard"
+    folders = "Images", "Feedforward Neural Networks", "Lowest Learning Rate", "Standard"
     plot_predictions(y_true, y_pred, *folders,
                      title="Predictions - Trained on {}, tested on {}".format(trained_on, tested_on))
     plot_differences(y_true, y_pred, *folders,
@@ -40,13 +38,8 @@ def save_results(y_true, y_pred, trained_on="", tested_on="", new_file=True):
 
 def train_model(dao_1, dao_2, train_dao, train_condition, scores):
     train, test = train_dao.datasets[train_condition]
-    reduced_number = 200
-    unique_unitnrs = train['unit_nr'].unique()
-    if len(unique_unitnrs) > reduced_number:
-        chosen = random.sample(list(unique_unitnrs), reduced_number)
-        train = train[train['unit_nr'].isin(chosen)]
     x_train, y_train, x_test, y_test = get_data(train, test, train_dao)
-    model = FFNModel(len(train_dao.sensor_names), lr=0.05)
+    model = FFNModel(len(train_dao.sensor_names))
     for epoch in range(50):
         model.train(x_train, y_train, 1)
         predicted = model.predict(x_test)
