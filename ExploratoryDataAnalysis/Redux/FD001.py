@@ -58,9 +58,11 @@ for i in drop_columns:
 corr_matrix = train_df[sensor_columns+['RUL']].corr()
 plt.figure(figsize=(20, 20))
 ticks = ["s_{}".format(column.split('}')[0].split('{')[1]) for column in sensor_columns]
+ticks.append('RUL')
 sns.heatmap(data=corr_matrix, annot=True, vmin=-1, vmax=1, center=0, cmap='coolwarm', xticklabels=ticks, yticklabels=ticks)
 plt.yticks(rotation=0)
-plt.close()   # plt.show()
+plt.close()
+# plt.show()
 
 sensor_names = {}
 for sensor in sensor_columns:
@@ -102,4 +104,5 @@ plt.close()
 sns.scatterplot(x=train_df['s_{9}'], y=train_df['s_{14}'])
 plt.xlabel('s_9')
 plt.ylabel('s_14')
-plt.show()
+# plt.show()
+plt.close()
