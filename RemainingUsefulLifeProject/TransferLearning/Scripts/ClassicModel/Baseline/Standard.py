@@ -18,7 +18,7 @@ def get_data(train_df, test_df, dao):
         test_x, test_y = test_x[index], test_y[index]
     return train_x, train_y, test_x, test_y
 
-def write_gathered_scores(scores, title="Scores MAML"):
+def write_gathered_scores(scores, title="Scores Transfer Learning"):
     folders = "Results", "Standard Model", "Transfer Learning", "Baseline Model", "Standard"
     folder = __get_directory__(*folders)
     for key in scores.keys():

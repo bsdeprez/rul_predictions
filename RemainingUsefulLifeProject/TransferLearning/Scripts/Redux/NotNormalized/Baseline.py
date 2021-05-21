@@ -5,7 +5,6 @@ from RemainingUsefulLifeProject.Baseline.Models.Redux.Standard import FFNModel, 
 from RemainingUsefulLifeProject.Data.cmapss_dao import DataObject
 from RemainingUsefulLifeProject.Data.plotter import __get_directory__
 from RemainingUsefulLifeProject.Data.scoring_methods import r2_score, mse_score, phm_score
-from RemainingUsefulLifeProject.MAML.Models.maml import train_maml
 
 lr = 0.01
 epochs = 50
@@ -31,7 +30,7 @@ def create_sets(dao):
 
 
 def write_gathered_scores(scores, title="Scores Transfer Learning"):
-    folders = "Results", "Redux Model", "MAML", "Baseline Model", "Standard"
+    folders = "Results", "Redux Model", "Transfer Learning", "Baseline Model", "Standard"
     folder = __get_directory__(*folders)
     for cond in scores.keys():
         file_title = "{} - condition {}.csv".format(title, cond)
@@ -45,34 +44,38 @@ def write_gathered_scores(scores, title="Scores Transfer Learning"):
 
 # Read in the data and create the dataset
 filepath = "../../../../../Data/CMAPSSData/"
-FD002 = DataObject('FD002', filepath)
+FD002 = DataObject('FD002', filepath, normalize=False)
 train_sets, test_sets = create_sets(FD002)
 
 # Create training set:
-train_set = []
-for condition in range(1, 4):
-    train_set.append(train_sets[condition])
+train_1, test_1 = FD002.datasets[1]
+train_2, _ = FD002.datasets[2]
+train_3, _ = FD002.datasets[3]
+train_set = pd.concat((train_1, train_2, train_3))
+x_train, y_train, _, _ = get_data(train_set, test_1, FD002)
 
 # Create and train model:
 model = FFNModel(len(FD002.sensor_names), lr=lr)
-maml = train_maml(model, copy_model, epochs=epochs, dataset=train_set, lr_inner=lr)
-
-# Test the maml:
+model.train(x_train, y_train, epochs=1)
+weight_path = "../../../../Saved Models/ReduxModelTrainedOnCombinedDataset/model"
+model.load_weights(weight_path)
+print(model.weights)
+"""# Test the transfer learning:
 gathered_scores, models = {}, {}
 for condition in FD002.conditions:
     gathered_scores[condition] = {'r2': [], 'phm': [], 'mse': []}
-    models[condition] = copy_model(maml, train_sets[condition][0])
+    models[condition] = copy_model(model, x_train)
 
 for epoch in range(1, epochs+1):
-    print(" ====================== epoch {:0>2d}/{:0>2d} ======================".format(epoch, epochs))
+    print(" ====================== epoch {:0>2d}/{:0>2d} ======================".format(epoch, 50))
     for condition in FD002.conditions:
         x_train, y_train = train_sets[condition]
         x_test, y_test = test_sets[condition]
-        models[condition].train(x_train, y_train, epochs=1)
+        models[condition].train(x_train, y_train, 1)
         y_hat = models[condition].predict(x_test)
         r2, mse, phm = r2_score(y_test, y_hat), mse_score(y_test, y_hat), phm_score(y_test, y_hat)
         gathered_scores[condition]['r2'].append(r2)
         gathered_scores[condition]['mse'].append(mse)
         gathered_scores[condition]['phm'].append(phm)
 
-write_gathered_scores(gathered_scores)
+write_gathered_scores(gathered_scores)"""

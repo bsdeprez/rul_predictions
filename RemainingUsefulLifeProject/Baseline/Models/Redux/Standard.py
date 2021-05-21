@@ -16,7 +16,7 @@ def copy_model(model, x):
 class FFNModel(keras.Model, ABC):
 
     def __init__(self, input_size, lr=0.02):
-        super().__init__()
+        super(FFNModel, self).__init__()
         self.input_size = input_size
         self.learning_rate = lr
         self.optimizer = keras.optimizers.Adam(learning_rate=lr)
@@ -27,11 +27,14 @@ class FFNModel(keras.Model, ABC):
         self.out = Dense(1)
 
     def __forward__(self, x):
-        x = keras.activations.relu(self.hidden1(x))
-        x = keras.activations.relu(self.hidden2(x))
-        x = keras.activations.relu(self.hidden3(x))
-        x = self.out(x)
+        x = keras.activations.linear(self.hidden1(x))
+        x = keras.activations.linear(self.hidden2(x))
+        x = keras.activations.linear(self.hidden3(x))
+        x = keras.activations.relu(self.out(x))
         return x
+
+    def call(self, inputs, training=None, mask=None):
+        return self.__forward__(inputs)
 
     def get_model(self):
         return self

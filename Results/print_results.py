@@ -2,9 +2,9 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
-filepath_FFNN = "FeedForward Neural Network\\Baseline\\Standard"
-filepath_TL = "Transfer Learning\\Baseline\\Standard"
-filepath_MAML = "MAML\\Baseline\\Standard"
+filepath_FFNN = "Redux Model\\Neural Network\\Baseline Model\\Standard"
+filepath_TL = "Redux Model\\Transfer Learning\\Baseline Model\\Standard"
+filepath_MAML = "Redux Model\\MAML\\Baseline Model\\Standard"
 
 for file_FFNN, file_TL, file_MAML in zip(os.listdir(filepath_FFNN), os.listdir(filepath_TL), os.listdir(filepath_MAML)):
     location_FFNN = os.path.join(os.path.abspath(""), filepath_FFNN, file_FFNN)

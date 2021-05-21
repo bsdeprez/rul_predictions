@@ -18,8 +18,8 @@ def get_data(train_df, test_df, dao):
     return train_x, train_y, test_x, test_y
 
 
-def write_gathered_scores(scores, title="Scores MAML"):
-    folders = "Results", "Standard Model", "MAML", "Baseline Model", "Standard"
+def write_gathered_scores(scores, title="Scores Transfer Learning"):
+    folders = "Results", "Standard Model", "Transfer Learning", "Baseline Model", "Standard"
     folder = __get_directory__(*folders)
     for key in scores.keys():
         file_title = "{} - Condition {}.csv".format(title, key)
@@ -49,7 +49,7 @@ for condition in (1, 2, 3):
 model = FFNModel(len(FD002.sensor_names))
 maml = train_maml(model, copy_model, epochs=50, dataset=train_dataset)
 
-# TEST THE MAML
+# TEST THE Transfer Learning
 gathered_scores = {}
 test_data = {}
 train_data = {}

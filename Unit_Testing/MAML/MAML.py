@@ -22,4 +22,4 @@ maml = train_maml(model, copy_model, epochs=500, dataset=train_sets)
 generators = [SinusoidGenerator(K=10) for _ in range(7)]
 for index in np.random.randint(0, len(generators), size=3):
     eval_sinewave_for_test(copied_model, copy_fn=copy_model, sinusoid_generator=generators[index], title="Transfer learning")
-    eval_sinewave_for_test(maml, copy_fn=copy_model, sinusoid_generator=generators[index], title="MAML")
+    eval_sinewave_for_test(maml, copy_fn=copy_model, sinusoid_generator=generators[index], title="Transfer Learning")
