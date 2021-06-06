@@ -38,6 +38,8 @@ scaler = MinMaxScaler()
 train_df[sensor_columns] = pd.DataFrame(scaler.fit_transform(train_df[sensor_columns]))
 train_df[sensor_columns] = 2 * train_df[sensor_columns] - 1
 
+print(train_df)
+
 # Add RUL columns
 max_cycle = train_df.groupby(by='unit_nr')['time_cycles'].max()
 result_frame = train_df.merge(max_cycle.to_frame(name='max'), left_on='unit_nr', right_index=True)
@@ -76,7 +78,7 @@ fig.set_figheight(15)
 fig.set_figwidth(15)
 df_list = []
 for column in sensor_columns:
-    data = [column, 'time_cycles', 'unit_nr']
+    data = [column, 'RUL', 'unit_nr']
     df_list.append(train_df[data])
 
 count = 0
@@ -86,11 +88,12 @@ for r in range(nrows):
             if i % 10 == 0:
                 sensor = df_list[count].columns[0]
                 df = df_list[count][df_list[count]['unit_nr'] == i]
-                axes[r][c].plot(df['time_cycles'], df[sensor])
+                axes[r][c].plot(df['RUL'], df[sensor])
                 axes[r][c].title.set_text(sensor_names[sensor])
+        axes[r][c].invert_xaxis()
         count += 1
 plt.tight_layout()
-plt.close()
+plt.show()
 
 data = train_df[train_df['unit_nr'] == 1][['RUL', 'time_cycles']]
 data_kink = train_df[train_df['unit_nr'] == 1]['RUL'].clip(upper=130)
