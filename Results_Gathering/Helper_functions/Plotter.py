@@ -11,10 +11,9 @@ def __get_directory__(*args):
     return base_path
 
 
-def write_gathered_scores(scores, title="Scores Baseline"):
-    folders = "Results", "Standard Model"
+def write_gathered_scores(scores, *locations, title="Scores Baseline"):
+    folders = "Results", *locations
     folder = __get_directory__(*folders)
-    print(folder)
     for key in scores.keys():
         file_title = "{} - Condition {}.csv".format(title, key)
         file_location = os.path.join(folder, file_title)
