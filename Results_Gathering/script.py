@@ -1,25 +1,17 @@
-import numpy as np
 import pandas as pd
 from keras.layers import Dense
 from keras.models import Sequential
 
 from Results_Gathering.Data.DAO import DataObject
-from Results_Gathering.Models.Standard_Model import FFNModel, copy_model
+from Results_Gathering.Data.Data_Helper import get_data
+from Results_Gathering.Helper_functions.Plotter import write_gathered_scores
+from Results_Gathering.Helper_functions.Scoring_functions import *
+from Results_Gathering.Models.Standard_Model import FFNModel
 
 """
 PARAMETERS
 """
 learning_rate = 0.01
-
-
-def get_data(train_df, test_df, dao):
-    train_x, train_y = train_df[dao.sensor_names].values, train_df['RUL'].values
-    test_df = test_df.groupby(by='unit_nr').last().reset_index()
-    test_x, test_y = test_df[dao.sensor_names].values, test_df['RUL'].values
-    if len(test_y) > 100:
-        index = np.random.choice(len(test_y), 100, replace=False)
-        test_x, test_y = test_x[index], test_y[index]
-    return train_x, train_y, test_x, test_y
 
 
 # Create the dataset used for training the baseline.
@@ -38,7 +30,7 @@ model.train(x_train, y_train, epochs=2)
 
 # Create the data for transfer learning.
 gathered_scores, test_data, train_data, models = {}, {}, {}, {}
-for condition in FD002.conditions[:1]:
+for condition in FD002.conditions:
     gathered_scores[condition] = {'r2': [], 'phm': [], 'mse': []}
     train, test = FD002.datasets[condition]
     x_train, y_train, x_test, y_test = get_data(train, test, FD002)
@@ -57,8 +49,24 @@ for condition in FD002.conditions[:1]:
     copied_model.add(Dense(50, name="new_layer_1"))
     copied_model.add(Dense(1, name="new_output_layer"))
     copied_model.compile(loss="mean_squared_error", optimizer=model.optimizer)
+    models[condition] = copied_model
 
+# Train the new models on their respective data set
+for step in range(2):
+    print(" ===================== STEP {} ===================== ".format(step))
+    for condition in FD002.conditions:
+        x_test, y_test = test_data[condition]
+        predicted = models[condition].predict(x_test)
+        r2, mse, phm = r2_score(y_test, predicted), mse_score(y_test, predicted), phm_score(y_test, predicted)
+        gathered_scores[condition]['r2'].append(r2)
+        gathered_scores[condition]['mse'].append(mse)
+        gathered_scores[condition]['phm'].append(phm)
+    for condition in FD002.conditions:
+        x_train, y_train = train_data[condition]
+        models[condition].fit(x_train, y_train, epochs=1)
 
+# Write the scores of transfer learning
+write_gathered_scores(gathered_scores)
 
 
 
