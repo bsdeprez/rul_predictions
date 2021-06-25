@@ -6,7 +6,7 @@ def r2_score(y_true, y_predicted):
 
 def phm_score(y_true, y_predicted):
     d = y_predicted - y_true
-    d = np.where(d < 0, -d/10, d/13)
+    d = np.where(d < 0, -d/13, d/10)
     s = np.exp(d) - 1
     return np.sum(s)
 

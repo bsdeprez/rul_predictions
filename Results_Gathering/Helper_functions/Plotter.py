@@ -11,7 +11,7 @@ def __get_directory__(*args):
     return base_path
 
 
-def write_gathered_scores(scores, *locations, title="Scores Baseline"):
+def write_gathered_scores(scores, baseline, *locations, title="Scores Baseline"):
     folders = "Results", *locations
     folder = __get_directory__(*folders)
     for key in scores.keys():
@@ -22,3 +22,10 @@ def write_gathered_scores(scores, *locations, title="Scores Baseline"):
             file.write("epoch;r2;mse;phm\n")
             for epoch in range(len(r2_sc)):
                 file.write("{};{};{};{}\n".format(epoch, r2_sc[epoch], mse_sc[epoch], phm_sc[epoch]))
+    file_title = "{} - General.txt".format(title)
+    file_location = os.path.join(folder, file_title)
+    with open(file_location, 'w+') as file:
+        for condition in baseline.keys():
+            file.write(" ============ CONDITION {} ============ \n".format(condition))
+            for score in baseline[condition].keys():
+                file.write("{}: {}\n".format(score, baseline[condition][score]))

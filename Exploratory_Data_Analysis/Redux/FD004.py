@@ -133,6 +133,7 @@ for row in range(0, 3):
     sensor = sensors[row]
     axes[row][0].scatter(df_kmeans['RUL'], df_kmeans[sensor], c=df_kmeans['cluster'], cmap='Set1')
     axes[row][0].invert_xaxis()
+    axes[row][0].legend()
     axes[row][0].title.set_text(sensor)
 plt.tight_layout()
 plt.show()

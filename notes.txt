@@ -1,0 +1,92 @@
+====================================
+Experiment 1:
+epochs: 50
+learning_rate: 0.01
+
+Unit numbers in train-data:
+    Condition 4: 260
+    Condition 5: 260
+    Condition 6: 260
+Total number of elements in train_data:
+    Condition 4: 8122
+    Condition 5: 8037
+    Condition 6: 8096
+====================================
+Experiment 2:
+epochs: 50
+learning_rate: 0.01
+
+Units in train-data:
+    Condition 4: 200
+    Condition 5: 200
+    Condition 6: 200
+Total number of elements in train_data:
+    Condition 4: 6298
+    Condition 5: 6193
+    Condition 6: 6223
+====================================
+Experiment 3:
+epochs: 50
+learning_rate: 0.01
+
+Units in train-data:
+    Condition 4: 150
+    Condition 5: 150
+    Condition 6: 150
+Total number of elements in train_data:
+    Condition 4: 4747
+    Condition 5: 4643
+    Condition 6: 4652
+====================================
+Experiment 4:
+epochs: 50
+learning_rate: 0.01
+
+Units in train-data:
+    Condition 4: 100
+    Condition 5: 100
+    Condition 6: 100
+Total number of elements in train_data:
+    Condition 4: 3087
+    Condition 5: 3003
+    Condition 6: 2975
+====================================
+Experiment 5:
+epochs: 50
+learning_rate: 0.01
+
+Units in train-data:
+    Condition 4: 50
+    Condition 5: 50
+    Condition 6: 50
+Total number of elements in train_data:
+    Condition 4: 1589
+    Condition 5: 1524
+    Condition 6: 1473
+====================================
+Experiment 6:
+epochs: 50
+learning_rate: 0.01
+
+Units in train-data:
+    Condition 4: 25
+    Condition 5: 25
+    Condition 6: 25
+Total number of elements in train_data:
+    Condition 4: 767
+    Condition 5: 763
+    Condition 6: 707
+====================================
+Experiment 7:
+epochs: 50
+learning_rate: 0.01
+
+Units in train-data:
+    Condition 4: 10
+    Condition 5: 10
+    Condition 6: 10
+Total number of elements in train_data:
+    Condition 4: 304
+    Condition 5: 292 
+    Condition 6: 265
+====================================
